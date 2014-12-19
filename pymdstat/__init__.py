@@ -11,6 +11,4 @@ __version__ = "0.1"
 __author__ = "Nicolas Hennion <nicolas@nicolargo.com>"
 __licence__ = "MIT"
 
-# Add:
-#from pymdstat import <list of classes of the __all__ variable>
-
+from pymdstat import mdstat
