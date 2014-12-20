@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 
 # import os
-# import sys
+import sys
 # import glob
 
 from setuptools import setup
 
 data_files = [
-    ('share/doc/pymdstat', ['AUTHORS', 'README.md'])
+    ('share/doc/pymdstat', ['AUTHORS', 'README.rst'])
 ]
 
 def get_data_files():
     data_files = [
-        ('share/doc/pymdstat', ['AUTHORS', 'NEWS', 'README.md'])
+        ('share/doc/pymdstat', ['AUTHORS', 'NEWS', 'README.rst'])
     ]
 
     # if hasattr(sys, 'real_prefix') or 'bsd' in sys.platform:
@@ -43,8 +43,8 @@ def get_requires():
 setup(
     name='pymdstat',
     version='0.1',
-    description="...",
-    long_description=open('README.md').read(),
+    description="Python lib to parse the /proc/mdstat file on Linux system",
+    long_description=open('README.rst').read(),
     author='Nicolas Hennion',
     author_email='nicolas@nicolargo.com',
     url='https://github.com/nicolargo/pymdstat',
@@ -60,7 +60,8 @@ setup(
     entry_points={"console_scripts": ["pymdstat=pymdstat.pymdstat:main"]},
     classifiers=[
         'Development Status :: 4 - Beta',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
     ]
 )

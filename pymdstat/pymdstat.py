@@ -4,25 +4,38 @@
 # PyMDstat
 # ...
 #
-# Copyright (C) 2013 Nicolargo <nicolas@nicolargo.com>
+# Copyright (C) 2014 Nicolargo <nicolas@nicolargo.com>
 
 from re import split
+try:
+    from functools import reduce
+except:
+    pass
 
 # Limit import to class...
-__all__ = ['mdstat']
+__all__ = ['MdStat']
 
 
 # Classes
-class mdstat(object):
+class MdStat(object):
     """
     Main mdstat class
     """
 
     def __init__(self, path='/proc/mdstat'):
         self.path = path
+        self.content = ''
 
         # Stats will be stored in a dict
         self.stats = self.load()
+
+    def __str__(self):
+        '''Return the content of the file'''
+        return self.content
+
+    def __repr__(self):
+        '''Return the content of the file'''
+        return self.content
 
     def get_path(self):
         '''Return the mdstat file path'''
@@ -31,6 +44,40 @@ class mdstat(object):
     def get_stats(self):
         '''Return the stats'''
         return self.stats
+
+    def personalities(self):
+        '''Return the personalities (list)'''
+        return self.get_stats()['personalities']
+
+    def arrays(self):
+        '''Return the arrays (list)'''
+        return self.get_stats()['arrays'].keys()
+
+    def type(self, array):
+        '''Return the array's type'''
+        return self.get_stats()['arrays'][array]['type']
+
+    def status(self, array):
+        '''Return the array's status'''
+        return self.get_stats()['arrays'][array]['status']
+
+    def components(self, array):
+        '''Return the componant of the arrays (list)'''
+        return self.get_stats()['arrays'][array]['components'].keys()
+
+    def available(self, array):
+        '''Return the array's available componants number'''
+        return int(self.get_stats()['arrays'][array]['available'])
+
+    def used(self, array):
+        '''Return the array's used componants number'''
+        return int(self.get_stats()['arrays'][array]['used'])
+
+    def config(self, array):
+        '''Return the array's config/status
+        U mean OK
+        _ mean Failed'''
+        return self.get_stats()['arrays'][array]['config']
 
     def load(self):
         '''Return a dict of stats'''
@@ -50,6 +97,9 @@ class mdstat(object):
         # Second to last before line: Array definition
         ret['arrays'] = self.get_arrays(lines[1:-1])
 
+        # Save the file content as it for the __str__ method
+        self.content = reduce(lambda x, y: x+y, lines)
+
         return ret
 
     def get_personalities(self, line):
@@ -60,22 +110,28 @@ class mdstat(object):
         '''Return a dict of arrays'''
         ret = {}
 
-        for line in lines:
+        i = 0
+        while i < len(lines):
             try:
                 # First array line: get the md device
-                md_device = self.get_md_device(line)
+                md_device = self.get_md_device_name(lines[i])
             except IndexError:
                 # No array detected
                 pass
             else:
                 # Array detected
                 if md_device is not None:
-                    ret[md_device] = self.get_array(line)
+                    # md device line
+                    ret[md_device] = self.get_md_device(lines[i])
+                    # md config/status line
+                    i += 1
+                    ret[md_device].update(self.get_md_status(lines[i]))
+            i += 1
 
         return ret
 
-    def get_array(self, line):
-        '''Return a dict of array stats define in the line'''
+    def get_md_device(self, line):
+        '''Return a dict of md device define in the line'''
         ret = {}
 
         splitted = split('\W+', line)
@@ -90,6 +146,21 @@ class mdstat(object):
 
         return ret
 
+    def get_md_status(self, line):
+        '''Return a dict of md status define in the line'''
+        ret = {}
+
+        splitted = split('\W+', line)
+        # The final 2 entries on this line: [n/m] [UUUU_]
+        # [n/m] means that ideally the array would have n devices however, currently, m devices are in use.
+        # Obviously when m >= n then things are good.
+        ret['available'] = splitted[-4]
+        ret['used'] = splitted[-3]
+        # [UUUU_] represents the status of each device, either U for up or _ for down.
+        ret['config'] = splitted[-2]
+
+        return ret
+
     def get_components(self, line):
         '''Return a dict of componants in the line
         key: device name (ex: 'sdc1')
@@ -97,13 +168,15 @@ class mdstat(object):
         '''
         ret = {}
 
-        splitted = split('\W+', line)[3:]
+        # Ignore (F) (see test 08)
+        line2 = reduce(lambda x, y: x+y, split('\(.+\)', line))
+        splitted = split('\W+', line2)[3:]
         ret = dict(zip(splitted[0::2], splitted[1::2]))
 
         return ret
 
-    def get_md_device(self, line):
-        '''Return a list of personalities readed from the input line'''
+    def get_md_device_name(self, line):
+        '''Return the md device name from the input line'''
         ret = split('\W+', line)[0]
         if ret.startswith('md'):
             return ret
