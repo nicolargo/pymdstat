@@ -4,7 +4,7 @@
 # PyMDstat
 # Unitary test
 #
-# Copyright (C) 2013 Nicolargo <nicolas@nicolargo.com>
+# Copyright (C) 2014 Nicolargo <nicolas@nicolargo.com>
 
 import unittest
 
@@ -15,7 +15,7 @@ class TestPyMdStat(unittest.TestCase):
     '''Test PyMDstat module'''
 
     def test_000_loadall(self):
-        for i in range(1, 8):
+        for i in range(1, 10):
             mdstat_test = MdStat('./tests/mdstat.0%s' % i)
             # print('%s' % mdstat_test.get_stats())
             self.assertNotEqual(mdstat_test.get_stats(), {})
@@ -73,6 +73,18 @@ class TestPyMdStat(unittest.TestCase):
         mdstat_test = MdStat('./tests/mdstat.0%s' % i)
         self.assertItemsEqual(mdstat_test.get_stats()['personalities'], ['raid1'])
         self.assertEqual(mdstat_test.get_stats()['arrays'], {'md1': {'status': 'active', 'available': '6', 'used': '4', 'components': {'sdc1': '2', 'sdb1': '4', 'sde1': '6', 'sdd1': '3', 'sdg1': '1'}, 'config': '_UUUU_', 'type': 'raid1'}})
+
+    def test_008(self):
+        i = 8
+        mdstat_test = MdStat('./tests/mdstat.0%s' % i)
+        self.assertItemsEqual(mdstat_test.get_stats()['personalities'], ['raid5'])
+        self.assertEqual(mdstat_test.get_stats()['arrays'], {'md0': {'status': 'inactive', 'available': '4', 'used': '4', 'components': {'sdd1': '3', 'sdc1': '2', 'sda1': '0'}, 'config': 'UUUU', 'type': 'raid5'}})
+
+    def test_009(self):
+        i = 9
+        mdstat_test = MdStat('./tests/mdstat.0%s' % i)
+        self.assertItemsEqual(mdstat_test.get_stats()['personalities'], ['linear', 'multipath', 'raid0', 'raid1', 'raid6', 'raid5', 'raid4', 'raid10'])
+        self.assertEqual(mdstat_test.get_stats()['arrays'], {'md2': {'status': 'inactive', 'available': None, 'used': None, 'components': {'sdb': '0'}, 'config': None, 'type': None}, 'md0': {'status': 'active', 'available': '2', 'used': '2', 'components': {'sde1': '0', 'sdf1': '1'}, 'config': 'UU', 'type': 'raid1'}, 'md1': {'status': 'active', 'available': '2', 'used': '2', 'components': {'sde2': '0', 'sdf2': '1'}, 'config': 'UU', 'type': 'raid1'}})
 
 if __name__ == '__main__':
     unittest.main()

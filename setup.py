@@ -42,7 +42,7 @@ def get_requires():
 
 setup(
     name='pymdstat',
-    version='0.1',
+    version='0.2',
     description="Python lib to parse the /proc/mdstat file on Linux system",
     long_description=open('README.rst').read(),
     author='Nicolas Hennion',

@@ -1,0 +1,5 @@
+Personalities : [raid5]
+md0 : inactive raid5 sdd1[3] sdc1[2] sda1[0]
+      95425536 blocks level 5, 128k chunk, algorithm 2 [4/4] [UUUU]
+
+unused devices: <none> 

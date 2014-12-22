@@ -95,7 +95,7 @@ class MdStat(object):
         ret['personalities'] = self.get_personalities(lines[0])
 
         # Second to last before line: Array definition
-        ret['arrays'] = self.get_arrays(lines[1:-1])
+        ret['arrays'] = self.get_arrays(lines[1:-1], ret['personalities'])
 
         # Save the file content as it for the __str__ method
         self.content = reduce(lambda x, y: x+y, lines)
@@ -106,7 +106,7 @@ class MdStat(object):
         '''Return a list of personalities readed from the input line'''
         return [split('\W+', i)[1] for i in line.split(':')[1].split(' ') if i.startswith('[')]
 
-    def get_arrays(self, lines):
+    def get_arrays(self, lines, personalities=[]):
         '''Return a dict of arrays'''
         ret = {}
 
@@ -122,7 +122,7 @@ class MdStat(object):
                 # Array detected
                 if md_device is not None:
                     # md device line
-                    ret[md_device] = self.get_md_device(lines[i])
+                    ret[md_device] = self.get_md_device(lines[i], personalities)
                     # md config/status line
                     i += 1
                     ret[md_device].update(self.get_md_status(lines[i]))
@@ -130,7 +130,7 @@ class MdStat(object):
 
         return ret
 
-    def get_md_device(self, line):
+    def get_md_device(self, line, personalities=[]):
         '''Return a dict of md device define in the line'''
         ret = {}
 
@@ -139,10 +139,16 @@ class MdStat(object):
         # Active or 'started'. An inactive array is usually faulty.
         # Stopped arrays aren't visible here.
         ret['status'] = splitted[1]
-        # Raid type (ex: RAID5)
-        ret['type'] = splitted[2]
-        # Array's components
-        ret['components'] = self.get_components(line)
+        if splitted[2] in personalities:
+            # Raid type (ex: RAID5)
+            ret['type'] = splitted[2]
+            # Array's components
+            ret['components'] = self.get_components(line, with_type=True)
+        else:
+            # Raid type (ex: RAID5)
+            ret['type'] = None
+            # Array's components
+            ret['components'] = self.get_components(line, with_type=False)
 
         return ret
 
@@ -151,17 +157,22 @@ class MdStat(object):
         ret = {}
 
         splitted = split('\W+', line)
-        # The final 2 entries on this line: [n/m] [UUUU_]
-        # [n/m] means that ideally the array would have n devices however, currently, m devices are in use.
-        # Obviously when m >= n then things are good.
-        ret['available'] = splitted[-4]
-        ret['used'] = splitted[-3]
-        # [UUUU_] represents the status of each device, either U for up or _ for down.
-        ret['config'] = splitted[-2]
+        if len(splitted) < 7:
+            ret['available'] = None
+            ret['used'] = None
+            ret['config'] = None
+        else:
+            # The final 2 entries on this line: [n/m] [UUUU_]
+            # [n/m] means that ideally the array would have n devices however, currently, m devices are in use.
+            # Obviously when m >= n then things are good.
+            ret['available'] = splitted[-4]
+            ret['used'] = splitted[-3]
+            # [UUUU_] represents the status of each device, either U for up or _ for down.
+            ret['config'] = splitted[-2]
 
         return ret
 
-    def get_components(self, line):
+    def get_components(self, line, with_type=True):
         '''Return a dict of componants in the line
         key: device name (ex: 'sdc1')
         value: device role number
@@ -170,7 +181,10 @@ class MdStat(object):
 
         # Ignore (F) (see test 08)
         line2 = reduce(lambda x, y: x+y, split('\(.+\)', line))
-        splitted = split('\W+', line2)[3:]
+        if with_type:
+            splitted = split('\W+', line2)[3:]
+        else:
+            splitted = split('\W+', line2)[2:]
         ret = dict(zip(splitted[0::2], splitted[1::2]))
 
         return ret
