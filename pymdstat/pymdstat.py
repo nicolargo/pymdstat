@@ -6,14 +6,8 @@
 #
 # Copyright (C) 2014 Nicolargo <nicolas@nicolargo.com>
 
+from functools import reduce
 from re import split
-try:
-    from functools import reduce
-except:
-    pass
-
-# Limit import to class...
-__all__ = ['MdStat']
 
 
 # Classes
