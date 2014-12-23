@@ -6,6 +6,7 @@
 #
 # Copyright (C) 2014 Nicolargo <nicolas@nicolargo.com>
 
+import sys
 from functools import reduce
 from re import split
 
@@ -77,10 +78,14 @@ class MdStat(object):
         '''Return a dict of stats'''
         ret = {}
 
-        # Read the mdstat file
-        with open(self.get_path(), 'r') as f:
-            # lines is a list of line (with \n)
-            lines = f.readlines()
+        # Read the mdstat file, if it exists, exit otherwise.
+        try:
+            with open(self.get_path(), 'r') as f:
+                # lines is a list of line (with \n)
+                lines = f.readlines()
+        except (OSError, IOError) as err:
+            print("Failed to open '{0}': {1}".format(self.get_path(), err))
+            sys.exit(1)
 
         # First line: get the personalities
         # The "Personalities" line tells you what RAID level the kernel currently supports.
