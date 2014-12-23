@@ -11,4 +11,6 @@ __version__ = "0.2"
 __author__ = "Nicolas Hennion <nicolas@nicolargo.com>"
 __licence__ = "MIT"
 
-from pymdstat import MdStat
+__all__ = ['MdStat']
+
+from .pymdstat import MdStat
