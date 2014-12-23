@@ -42,13 +42,13 @@ def get_requires():
 
 setup(
     name='pymdstat',
-    version='0.2',
+    version='0.3',
     description="Python lib to parse the /proc/mdstat file on Linux system",
     long_description=open('README.rst').read(),
     author='Nicolas Hennion',
     author_email='nicolas@nicolargo.com',
     url='https://github.com/nicolargo/pymdstat',
-    #download_url='https://s3.amazonaws.com/pymdstat/pymdstat-0.1.tar.gz',
+    #download_url='https://s3.amazonaws.com/pymdstat/pymdstat-0.3.tar.gz',
     license="LGPL",
     keywords="...",
     install_requires=get_requires(),
