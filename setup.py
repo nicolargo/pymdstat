@@ -6,13 +6,13 @@ data_files = [('share/doc/pymdstat', ['AUTHORS', 'LICENSE', 'NEWS', 'README.rst'
 
 setup(
     name='pymdstat',
-    version='0.4',
+    version='0.4.1',
     description="Python library to parse Linux /proc/mdstat",
     long_description=open('README.rst').read(),
     author='Nicolas Hennion',
     author_email='nicolas@nicolargo.com',
     url='https://github.com/nicolargo/pymdstat',
-    # download_url='https://s3.amazonaws.com/pymdstat/pymdstat-0.4.tar.gz',
+    # download_url='https://s3.amazonaws.com/pymdstat/pymdstat-0.4.1.tar.gz',
     license="MIT",
     keywords="raid linux",
     packages=['pymdstat'],
@@ -21,7 +21,7 @@ setup(
     # test_suite="pymdstat.test",
     classifiers=[
         'Development Status :: 4 - Beta',
-        'Intended Audience :: Developers,'
+        'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 2',
