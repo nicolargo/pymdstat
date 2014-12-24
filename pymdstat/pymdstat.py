@@ -1,21 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# PyMDstat
-# ...
-#
 # Copyright (C) 2014 Nicolargo <nicolas@nicolargo.com>
+# License: MIT, see LICENSE for more details.
 
 import sys
 from functools import reduce
 from re import split
 
 
-# Classes
 class MdStat(object):
-    """
-    Main mdstat class
-    """
+
+    """Main mdstat class."""
 
     def __init__(self, path='/proc/mdstat'):
         self.path = path
@@ -25,57 +21,59 @@ class MdStat(object):
         self.stats = self.load()
 
     def __str__(self):
-        '''Return the content of the file'''
+        """Return the content of the file."""
         return self.content
 
     def __repr__(self):
-        '''Return the content of the file'''
+        """Return the content of the file."""
         return self.content
 
     def get_path(self):
-        '''Return the mdstat file path'''
+        """Return the mdstat file path."""
         return self.path
 
     def get_stats(self):
-        '''Return the stats'''
+        """Return the stats."""
         return self.stats
 
     def personalities(self):
-        '''Return the personalities (list)'''
+        """Return the personalities (list)."""
         return self.get_stats()['personalities']
 
     def arrays(self):
-        '''Return the arrays (list)'''
+        """Return the arrays (list)."""
         return self.get_stats()['arrays'].keys()
 
     def type(self, array):
-        '''Return the array's type'''
+        """Return the array's type."""
         return self.get_stats()['arrays'][array]['type']
 
     def status(self, array):
-        '''Return the array's status'''
+        """Return the array's status."""
         return self.get_stats()['arrays'][array]['status']
 
     def components(self, array):
-        '''Return the componant of the arrays (list)'''
+        """Return the components of the arrays (list)."""
         return self.get_stats()['arrays'][array]['components'].keys()
 
     def available(self, array):
-        '''Return the array's available componants number'''
+        """Return the array's available components number."""
         return int(self.get_stats()['arrays'][array]['available'])
 
     def used(self, array):
-        '''Return the array's used componants number'''
+        """Return the array's used components number."""
         return int(self.get_stats()['arrays'][array]['used'])
 
     def config(self, array):
-        '''Return the array's config/status
+        """Return the array's config/status.
+
         U mean OK
-        _ mean Failed'''
+        _ mean Failed
+        """
         return self.get_stats()['arrays'][array]['config']
 
     def load(self):
-        '''Return a dict of stats'''
+        """Return a dict of stats."""
         ret = {}
 
         # Read the mdstat file, if it exists, exit otherwise.
@@ -97,16 +95,16 @@ class MdStat(object):
         ret['arrays'] = self.get_arrays(lines[1:-1], ret['personalities'])
 
         # Save the file content as it for the __str__ method
-        self.content = reduce(lambda x, y: x+y, lines)
+        self.content = reduce(lambda x, y: x + y, lines)
 
         return ret
 
     def get_personalities(self, line):
-        '''Return a list of personalities readed from the input line'''
+        """Return a list of personalities readed from the input line."""
         return [split('\W+', i)[1] for i in line.split(':')[1].split(' ') if i.startswith('[')]
 
     def get_arrays(self, lines, personalities=[]):
-        '''Return a dict of arrays'''
+        """Return a dict of arrays."""
         ret = {}
 
         i = 0
@@ -130,7 +128,7 @@ class MdStat(object):
         return ret
 
     def get_md_device(self, line, personalities=[]):
-        '''Return a dict of md device define in the line'''
+        """Return a dict of md device define in the line."""
         ret = {}
 
         splitted = split('\W+', line)
@@ -152,7 +150,7 @@ class MdStat(object):
         return ret
 
     def get_md_status(self, line):
-        '''Return a dict of md status define in the line'''
+        """Return a dict of md status define in the line."""
         ret = {}
 
         splitted = split('\W+', line)
@@ -172,14 +170,15 @@ class MdStat(object):
         return ret
 
     def get_components(self, line, with_type=True):
-        '''Return a dict of componants in the line
+        """Return a dict of components in the line.
+
         key: device name (ex: 'sdc1')
         value: device role number
-        '''
+        """
         ret = {}
 
         # Ignore (F) (see test 08)
-        line2 = reduce(lambda x, y: x+y, split('\(.+\)', line))
+        line2 = reduce(lambda x, y: x + y, split('\(.+\)', line))
         if with_type:
             splitted = split('\W+', line2)[3:]
         else:
@@ -189,7 +188,7 @@ class MdStat(object):
         return ret
 
     def get_md_device_name(self, line):
-        '''Return the md device name from the input line'''
+        """Return the md device name from the input line."""
         ret = split('\W+', line)[0]
         if ret.startswith('md'):
             return ret
