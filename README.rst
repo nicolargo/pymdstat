@@ -11,7 +11,7 @@ PyMDstat
     :alt: Latest Version
 
 
-A pythonic library to parse /proc/mdstat file.
+A pythonic library to parse Linux /proc/mdstat file.
 
 .. code-block:: python
 
