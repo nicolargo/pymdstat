@@ -1,3 +1,9 @@
+v0.4 - 24/12/2014
+=================
+
+* Handle I/O error if /proc/mdstat doesn't exist (issue #2)
+* Misc tweaks - Pep (issue #3)
+
 v0.3 - 23/12/2014
 =================
 
