@@ -1,7 +1,15 @@
+v0.4.2 - 31/12/2014
+===================
+
+* Do not send a sys.exit if /proc/mdstat doesn't exist. Just return the error.
+
+v0.4.1 - 24/12/2014
+=================
+* Handle I/O error if /proc/mdstat doesn't exist (issue #2)
+
 v0.4 - 24/12/2014
 =================
 
-* Handle I/O error if /proc/mdstat doesn't exist (issue #2)
 * Misc tweaks - Pep (issue #3)
 
 v0.3 - 23/12/2014

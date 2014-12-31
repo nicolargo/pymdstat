@@ -27,6 +27,14 @@ class TestPyMdStat(unittest.TestCase):
             # print('%s' % mdstat_test.get_stats())
             self.assertNotEqual(mdstat_test.get_stats(), {})
 
+    def test_099_didnotexist(self):
+        try:
+            mdstat_test = MdStat('/proc/NOmdstat')
+        except IOError:
+            self.assertTrue(True)
+        else:
+            self.assertFalse(True)
+
     def test_099_model(self):
         i = 4
         mdstat_test = MdStat('./tests/mdstat.0%s' % i)
