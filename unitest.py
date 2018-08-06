@@ -7,6 +7,7 @@
 # Copyright (C) 2014 Nicolargo <nicolas@nicolargo.com>
 
 import unittest
+from pprint import pprint
 
 from pymdstat import MdStat
 
@@ -100,6 +101,12 @@ class TestPyMdStat(unittest.TestCase):
         mdstat_test = MdStat('./tests/mdstat.0%s' % i)
         self.assertCountEqual(mdstat_test.get_stats()['personalities'], ['linear', 'multipath', 'raid0', 'raid1', 'raid6', 'raid5', 'raid4', 'raid10'])
         self.assertEqual(mdstat_test.get_stats()['arrays'], {'md2': {'status': 'inactive', 'available': None, 'used': None, 'components': {'sdb': '0'}, 'config': None, 'type': None}, 'md0': {'status': 'active', 'available': '2', 'used': '2', 'components': {'sde1': '0', 'sdf1': '1'}, 'config': 'UU', 'type': 'raid1'}, 'md1': {'status': 'active', 'available': '2', 'used': '2', 'components': {'sde2': '0', 'sdf2': '1'}, 'config': 'UU', 'type': 'raid1'}})
+
+    def test_010(self):
+        i = 10
+        mdstat_test = MdStat('./tests/mdstat.%s' % i)
+        # self.assertCountEqual(mdstat_test.get_stats()['personalities'], ['linear', 'multipath', 'raid0', 'raid1', 'raid6', 'raid5', 'raid4', 'raid10'])
+        # self.assertEqual(mdstat_test.get_stats()['arrays'], {'md2': {'status': 'inactive', 'available': None, 'used': None, 'components': {'sdb': '0'}, 'config': None, 'type': None}, 'md0': {'status': 'active', 'available': '2', 'used': '2', 'components': {'sde1': '0', 'sdf1': '1'}, 'config': 'UU', 'type': 'raid1'}, 'md1': {'status': 'active', 'available': '2', 'used': '2', 'components': {'sde2': '0', 'sdf2': '1'}, 'config': 'UU', 'type': 'raid1'}})
 
 if __name__ == '__main__':
     unittest.main()
