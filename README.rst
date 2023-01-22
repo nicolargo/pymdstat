@@ -6,7 +6,7 @@ PyMDstat
         :target: https://scrutinizer-ci.com/g/nicolargo/pymdstat/?branch=master
 .. image:: https://scrutinizer-ci.com/g/nicolargo/pymdstat/badges/quality-score.png?b=master
         :target: https://scrutinizer-ci.com/g/nicolargo/pymdstat/?branch=master
-.. image:: https://pypip.in/version/pymdstat/badge.svg
+.. image:: https://img.shields.io/pypi/v/pymdstat.svg
     :target: https://pypi.python.org/pypi/pymdstat/
     :alt: Latest Version
 
