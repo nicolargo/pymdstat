@@ -1,0 +1,47 @@
+# This pipeline aims at building PyMmStat for the following targets:
+# - Pypi
+
+name: CI
+
+env:
+  DEFAULT_DOCKER_IMAGE: nicolargo/glances
+  NODE_ENV: ${{ (contains('refs/heads/master', github.ref) || startsWith(github.ref, 'refs/tags/v')) && 'prod' || 'dev' }}
+  PUSH_BRANCH: ${{ 'refs/heads/develop' == github.ref || 'refs/heads/master' == github.ref || startsWith(github.ref, 'refs/tags/v') }}
+  # linux/arm/v6 support following issue #2120
+  DOCKER_PLATFORMS: linux/amd64,linux/arm/v7,linux/arm64,linux/386
+
+on:
+  push:
+    branches: [ master ]
+    tags:
+      - v*
+
+jobs:
+
+  pypi:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Install pip install build tools
+        run: >-
+          python -m
+          pip install
+          build
+          --user
+
+      - name: Build a binary wheel and a source tarball
+        run: >-
+          python -m
+          build
+          --sdist
+          --wheel
+          --outdir dist/
+
+      - name: Publish distribution package to PyPI
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}

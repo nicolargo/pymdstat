@@ -1,0 +1,14 @@
+Personalities : [linear] [raid0] [raid1] [raid10] [raid6] [raid5] [raid4]
+md3 : active raid6 sdh6[8] sda6[0] sdg6[6] sdf6[5] sde6[4] sdd6[3] sdc6[2] sdb6[1]
+17581481472 blocks super 1.2 level 6, 64k chunk, algorithm 2 [8/8] [UUUUUUUU]
+
+md2 : active raid6 sdh5[15] sda5[9] sdg5[14] sdf5[8] sde5[13] sdd5[12] sdc5[11] sdb5[10]
+17552612736 blocks super 1.2 level 6, 64k chunk, algorithm 2 [8/8] [UUUUUUUU]
+
+md1 : active raid1 sdh2[7] sda2[0] sdb2[1] sdc2[2] sdd2[3] sde2[4] sdf2[5] sdg2[6]
+2097088 blocks [8/8] [UUUUUUUU]
+
+md0 : active raid1 sdh1[7] sda1[0] sdb1[1] sdc1[2] sdd1[3] sde1[4] sdf1[5] sdg1[6]
+2490176 blocks [8/8] [UUUUUUUU]
+
+unused devices: <none>

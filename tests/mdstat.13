@@ -1,0 +1,6 @@
+Personalities : [raid6] [raid5] [raid4] [raid0]
+md127 : active raid4 loop2[3] loop1[1] loop0[0]
+      10475520 blocks super 1.2 level 4, 32k chunk, algorithm 5 [4/3] [UU__]
+      [>....................]  reshape =  2.1% (115168/5237760) finish=3.7min speed=23033K/sec
+
+unused devices: <none>
