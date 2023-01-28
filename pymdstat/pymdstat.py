@@ -37,11 +37,15 @@ class MdStat(object):
         return self.stats
 
     def personalities(self):
-        """Return the personalities (list)."""
+        """Return the personalities (list).
+        List of all the software RAID levels supported by your md driver
+        """
         return self.get_stats()['personalities']
 
     def arrays(self):
-        """Return the arrays (list)."""
+        """Return the arrays (list).
+        List of actual RAID arrays configured on your system
+        """
         return self.get_stats()['arrays'].keys()
 
     def type(self, array):
@@ -49,11 +53,14 @@ class MdStat(object):
         return self.get_stats()['arrays'][array]['type']
 
     def status(self, array):
-        """Return the array's status."""
+        """Return the array's status.
+        Status of the array (active, inactive, ...)."""
         return self.get_stats()['arrays'][array]['status']
 
     def components(self, array):
-        """Return the components of the arrays (list)."""
+        """Return the components of the arrays (list).
+        List of devices that belong to that array.
+        """
         return self.get_stats()['arrays'][array]['components'].keys()
 
     def available(self, array):
@@ -119,6 +126,11 @@ class MdStat(object):
                     # md config/status line
                     i += 1
                     ret[md_device].update(self.get_md_status(lines[i]))
+                    # action line
+                    if ret[md_device].get('config') and '_' in ret[md_device].get('config'):
+                        i += 1
+                        print(lines[i])
+                        ret[md_device].update(self.get_md_action(lines[i]))
             i += 1
 
         return ret
@@ -150,11 +162,7 @@ class MdStat(object):
         ret = {}
 
         splitted = split('\W+', line)
-        if len(splitted) < 7:
-            ret['available'] = None
-            ret['used'] = None
-            ret['config'] = None
-        else:
+        if line.rstrip().endswith(']'):
             # The final 2 entries on this line: [n/m] [UUUU_]
             # [n/m] means that ideally the array would have n devices however, currently, m devices are in use.
             # Obviously when m >= n then things are good.
@@ -162,6 +170,32 @@ class MdStat(object):
             ret['used'] = splitted[-3]
             # [UUUU_] represents the status of each device, either U for up or _ for down.
             ret['config'] = splitted[-2]
+        elif line.lstrip().startswith('['):
+            print(line)
+            pass
+        else:
+            ret['available'] = None
+            ret['used'] = None
+            ret['config'] = None
+
+        return ret
+
+    def get_md_action(self, line):
+        """Return a dict of md action line.
+
+        @TODO:
+        Nothing is done for the moment, because i don't know if it is the only pattern.
+
+        But the following line should be analysed:
+              [>....................]  reshape =  2.1% (115168/5237760) finish=3.7min speed=23033K/sec
+        and the output should be:
+            {'reshape': '2.1%', 'finish': '3.7min', 'speed': '23033K/sec'}
+        """
+        ret = {}
+
+        splitted = split('\W+', line)
+        if line.lstrip().startswith('['):
+            pass
 
         return ret
 

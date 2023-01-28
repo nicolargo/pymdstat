@@ -105,8 +105,33 @@ class TestPyMdStat(unittest.TestCase):
     def test_010(self):
         i = 10
         mdstat_test = MdStat('./tests/mdstat.%s' % i)
-        # self.assertCountEqual(mdstat_test.get_stats()['personalities'], ['linear', 'multipath', 'raid0', 'raid1', 'raid6', 'raid5', 'raid4', 'raid10'])
-        # self.assertEqual(mdstat_test.get_stats()['arrays'], {'md2': {'status': 'inactive', 'available': None, 'used': None, 'components': {'sdb': '0'}, 'config': None, 'type': None}, 'md0': {'status': 'active', 'available': '2', 'used': '2', 'components': {'sde1': '0', 'sdf1': '1'}, 'config': 'UU', 'type': 'raid1'}, 'md1': {'status': 'active', 'available': '2', 'used': '2', 'components': {'sde2': '0', 'sdf2': '1'}, 'config': 'UU', 'type': 'raid1'}})
+        self.assertEqual(mdstat_test.get_stats()['arrays']['md126'], {'status': 'active', 'available': None, 'used': None, 'components': {'nvme0n1': '0', 'nvme1n1': '1'}, 'config': None, 'type': 'raid0'})
+        self.assertEqual(mdstat_test.get_stats()['arrays']['md129'], {'status': 'active', 'available': '2', 'used': '2', 'components': {'sda3': '0', 'sdd3': '1'}, 'config': 'UU', 'type': 'raid1'})
+
+    def test_011(self):
+        i = 11
+        mdstat_test = MdStat('./tests/mdstat.%s' % i)
+        self.assertEqual(type(mdstat_test.get_stats()), type({}))
+
+    def test_012(self):
+        i = 12
+        mdstat_test = MdStat('./tests/mdstat.%s' % i)
+        self.assertEqual(type(mdstat_test.get_stats()), type({}))
+
+    def test_013(self):
+        i = 13
+        mdstat_test = MdStat('./tests/mdstat.%s' % i)
+        self.assertEqual(type(mdstat_test.get_stats()), type({}))
+
+    def test_014(self):
+        i = 14
+        mdstat_test = MdStat('./tests/mdstat.%s' % i)
+        self.assertEqual(type(mdstat_test.get_stats()), type({}))
+
+    def test_015(self):
+        i = 15
+        mdstat_test = MdStat('./tests/mdstat.%s' % i)
+
 
 if __name__ == '__main__':
     unittest.main()
