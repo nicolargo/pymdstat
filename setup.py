@@ -1,14 +1,25 @@
 #!/usr/bin/env python
 
 from setuptools import setup
+import os
+import re
+
+with open(os.path.join('pymdstat', '__init__.py'), encoding='utf-8') as f:
+    version = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", f.read(), re.M).group(1)
+
+if not version:
+    raise RuntimeError('Cannot find version information in __init__.py file.')
+
+with open('README.rst', encoding='utf-8') as f:
+    long_description = f.read()
 
 data_files = [('share/doc/pymdstat', ['AUTHORS', 'LICENSE', 'NEWS', 'README.rst'])]
 
 setup(
     name='pymdstat',
-    version='0.4.2',
+    version=version,
     description="Python library to parse Linux /proc/mdstat",
-    long_description=open('README.rst').read(),
+    long_description=long_description,
     author='Nicolas Hennion',
     author_email='nicolas@nicolargo.com',
     url='https://github.com/nicolargo/pymdstat',
@@ -18,7 +29,7 @@ setup(
     packages=['pymdstat'],
     include_package_data=True,
     data_files=data_files,
-    # test_suite="pymdstat.test",
+    test_suite="unitest.py",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
