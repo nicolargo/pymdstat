@@ -4,7 +4,6 @@
 # Copyright (C) 2014 Nicolargo <nicolas@nicolargo.com>
 # License: MIT, see LICENSE for more details.
 
-import sys
 from functools import reduce
 from re import split
 
@@ -104,7 +103,7 @@ class MdStat(object):
 
     def get_personalities(self, line):
         """Return a list of personalities readed from the input line."""
-        return [split('\W+', i)[1] for i in line.split(':')[1].split(' ') if i.startswith('[')]
+        return [split(r'\W+', i)[1] for i in line.split(':')[1].split(' ') if i.startswith('[')]
 
     def get_arrays(self, lines, personalities=[]):
         """Return a dict of arrays."""
@@ -139,7 +138,7 @@ class MdStat(object):
         """Return a dict of md device define in the line."""
         ret = {}
 
-        splitted = split('\W+', line)
+        splitted = split(r'\W+', line)
         # Raid status
         # Active or 'started'. An inactive array is usually faulty.
         # Stopped arrays aren't visible here.
@@ -161,7 +160,7 @@ class MdStat(object):
         """Return a dict of md status define in the line."""
         ret = {}
 
-        splitted = split('\W+', line)
+        splitted = split(r'\W+', line)
         if line.rstrip().endswith(']'):
             # The final 2 entries on this line: [n/m] [UUUU_]
             # [n/m] means that ideally the array would have n devices however, currently, m devices are in use.
@@ -193,7 +192,7 @@ class MdStat(object):
         """
         ret = {}
 
-        splitted = split('\W+', line)
+        # splitted = split(r'\W+', line)
         if line.lstrip().startswith('['):
             pass
 
@@ -210,16 +209,16 @@ class MdStat(object):
         # Ignore (F) (see test 08)
         line2 = reduce(lambda x, y: x + y, split('\(.+\)', line))
         if with_type:
-            splitted = split('\W+', line2)[3:]
+            splitted = split(r'\W+', line2)[3:]
         else:
-            splitted = split('\W+', line2)[2:]
+            splitted = split(r'\W+', line2)[2:]
         ret = dict(zip(splitted[0::2], splitted[1::2]))
 
         return ret
 
     def get_md_device_name(self, line):
         """Return the md device name from the input line."""
-        ret = split('\W+', line)[0]
+        ret = split(r'\W+', line)[0]
         if ret.startswith('md'):
             return ret
         else:
