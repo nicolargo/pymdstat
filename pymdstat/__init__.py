@@ -7,7 +7,7 @@
 # Copyright (C) 2026 Nicolargo <nicolas@nicolargo.com>
 
 __appname__ = "PyMDstat"
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 __author__ = "Nicolas Hennion <nicolas@nicolargo.com>"
 __licence__ = "MIT"
 
